@@ -3,7 +3,7 @@ const app = require('../src/app');
 const pool = require('../src/config/db');
 
 beforeAll(async () => {
-  await pool.query(
+  await pool.query(`
     CREATE TABLE IF NOT EXISTS equipos (
       id SERIAL PRIMARY KEY,
       nombre VARCHAR(50) NOT NULL,
