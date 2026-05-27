@@ -1,6 +1,7 @@
 services:
   - type: web
     name: futbolstats-pro
+    plan: free
     runtime: node
     buildCommand: npm ci
     startCommand: node src/app.js
