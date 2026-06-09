@@ -27,8 +27,24 @@ app.get('/api/posiciones', async (req, res) => {
 const PORT = process.env.PORT || 3000;
 
 if (process.env.NODE_ENV !== 'test') {
-  app.listen(PORT, () => {
-    console.log(`🚀 Servidor corriendo en el puerto ${PORT}`);
+  // Inicialización automática de la base de datos para este proyecto
+  pool.query(`
+    CREATE TABLE IF NOT EXISTS equipos (
+      id SERIAL PRIMARY KEY,
+      nombre VARCHAR(50) NOT NULL,
+      puntos INT DEFAULT 0,
+      diferencia_goles INT DEFAULT 0
+    );
+    INSERT INTO equipos (nombre, puntos, diferencia_goles) 
+    SELECT 'ITP F.C.', 9, 5 
+    WHERE NOT EXISTS (SELECT 1 FROM equipos WHERE nombre = 'ITP F.C.');
+  `).then(() => {
+    console.log('✅ Base de datos inicializada o ya existente.');
+    app.listen(PORT, () => {
+      console.log(`🚀 Servidor corriendo en el puerto ${PORT}`);
+    });
+  }).catch(err => {
+    console.error('❌ Error inicializando la base de datos:', err);
   });
 }
 
